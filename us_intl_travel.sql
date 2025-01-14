@@ -119,6 +119,17 @@ ORDER BY Country;
 
 --14.	What is the percentage change in the total number of passengers from the United States in March 2021 compared to April 2021?
 
+WITH MonthlyPassengers AS (      
+    SELECT Month, SUM(Total_Passengers) AS Total_Passengers
+    FROM Data
+    WHERE Country = 'United Kingdom' AND Month IN ('2021-03-01', '2021-04-01')
+    GROUP BY Month
+)
+SELECT CAST(((April.Total_Passengers - March.Total_Passengers) * 100.0 / March.Total_Passengers) AS DECIMAL(10, 2)) AS Percentage_Change
+FROM 
+    (SELECT Total_Passengers FROM MonthlyPassengers WHERE Month = '2021-03-01') AS March,
+    (SELECT Total_Passengers FROM MonthlyPassengers WHERE Month = '2021-04-01') AS April;
+
 --15.	Which country had the highest total number of passengers in the first quarter of 2021 (January to March)?
 
 SELECT TOP 1 Country, SUM(Total_Passengers) AS Total_Passengers_Q1
